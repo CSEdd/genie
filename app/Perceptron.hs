@@ -10,7 +10,8 @@ type WeightedInputs = [WeightedSignal]
 
 {-@ type ActivationValue = {v : Int | v == 0 || v == 1} @-}
 {-@ perceptron :: Inputs -> ActivationValue @-}
-perceptron is = 0
+perceptron inputs = 
+    activationFunction . weightedSum . updateWeights . weightedInputs $ inputs (initialiseWeights inputs)
 
 initialiseWeights :: Inputs -> Weights
 initialiseWeights is = replicate (length is) 0
@@ -24,10 +25,10 @@ updateWeight w = w
 updateWeights :: WeightedInputs -> WeightedInputs
 updateWeights ws = map (updateWeight) ws
 
--- weightedSum :: WeightedInputs -> Int
--- weightedSum wis = foldl (+) 0 wis
+weightedSum :: WeightedInputs -> Int
+weightedSum wis = foldl (+) 0 wis
 
 activationFunction :: Int -> Int
 activationFunction x
-    | x < 0  = -1
+    | x < 0  = 0
     | x >= 0 = 1
