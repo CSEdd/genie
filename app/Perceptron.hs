@@ -1,27 +1,33 @@
-{-# LANGUAGE TemplateHaskell #-}
-
 module Perceptron where
-
-import Development.Placeholders
 
 type Signal = Float
 type Weight = Float
 type WeightedSignal = Float
 
-data InputSignals = InputSignals [Signal] deriving (Show)
-data Weights = Weights [Weight] deriving (Show)
-data WeightedInputSignals =  WeightedInputSignals [WeightedSignal] deriving (Show)
+type Inputs = [Signal]
+type Weights = [Weight]
+type WeightedInputs = [WeightedSignal]
 
-initialiseWeights is = InputSignals -> Weights
-initialiseWeights is = Weights . replicate (length is) 0
+{-@ type ActivationValue = {v : Int | v == 0 || v == 1} @-}
+{-@ perceptron :: Inputs -> ActivationValue @-}
+perceptron is = 0
 
-weightedInputSignals = InputSignals -> Weights -> WeightedInputSignals
-weightedInputSignals is w = zipWith (*) is w
+initialiseWeights :: Inputs -> Weights
+initialiseWeights is = replicate (length is) 0
 
-weightedSum = WeightedInputSignals -> Int
-weightedSum wis = foldl' (+) 0 wis
+weightedInputs :: Inputs -> Weights -> WeightedInputs
+weightedInputs is ws = zipWith (*) is ws
 
-activationFunction x = Int -> Int
+updateWeight :: Weight -> Weight
+updateWeight w = w
+
+updateWeights :: WeightedInputs -> WeightedInputs
+updateWeights ws = map (updateWeight) ws
+
+-- weightedSum :: WeightedInputs -> Int
+-- weightedSum wis = foldl (+) 0 wis
+
+activationFunction :: Int -> Int
 activationFunction x
     | x < 0  = -1
     | x >= 0 = 1
